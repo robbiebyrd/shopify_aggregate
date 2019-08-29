@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import '_formhelpers.html' as macros %}
+{% block content %}
+<div class="row">
+	<div class="col-lg-12">
+		<h1 class="page-header">Add User</h1>
+	</div>
+	<!-- /.col-lg-12 -->
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		{% call macros.render_form(form, action_url=url_for('add_user'), class_='add-user', action_text='Save') %}
+			{{ macros.render_field(form.email, label_visible=True, placeholder="Email", type="email") }}
+			{{ macros.render_field(form.first_name, label_visible=True, placeholder="First Name", type="text") }}
+			{{ macros.render_field(form.last_name, label_visible=True, placeholder="Last Name", type="text") }}
+			{{ macros.render_field(form.password, label_visible=True, placeholder="Password", type="password") }}
+			{{ macros.render_field(form.confirm, label_visible=True, placeholder="Confirm Password", type="password") }}
+		{% endcall %}
+	</div>
+</div>
+{% endblock %}

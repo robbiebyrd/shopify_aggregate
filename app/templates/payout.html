@@ -1,0 +1,350 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+	<div class="col-lg-12">
+		<h1 class="page-header">Payout Report</h1>
+	</div>
+	<!-- /.col-lg-12 -->
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Varese Sarabande
+			</div>
+			<div class="panel-body">
+				<ul class="nav nav-tabs">
+					<li class="active">
+						<a href="#store_data" data-toggle="tab">Store Data</a>
+					</li>
+					<li>
+						<a href="#sales_activity" data-toggle="tab">Sales Activity</a>
+					</li>
+					<li>
+						<a href="#due" data-toggle="tab">Due</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane fade in active" id="store_data">
+						<h3>Store Data</h3>
+						<div class="table-responsive">
+							<table class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th>Order ID</th>
+										<th>Order Status</th>
+										<th>Order Date</th>
+										<th>Invoice Date</th>
+										<th>Refund Date</th>
+										<th>Ship Date</th>
+										<th>SKU</th>
+										<th>Item Description</th>
+										<th>Order Quantity</th>
+										<th>Invoice Quantity</th>
+										<th>Shipped Quantity</th>
+										<th>Unit Price</th>
+										<th>Total Tax</th>
+										<th>Shipping Total</th>
+										<th>Order Total</th>
+										<th>Customer Name</th>
+										<th>Ship To City</th>
+										<th>Ship To State</th>
+										<th>Ship To Zip</th>
+										<th>Ship To Country</th>
+										<th>Payment Method</th>
+										<th>Email</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for datum in data.store_data %}
+									<tr>
+										<td>{{ data.store_data[loop.index0].order_id }} {{ datum.order_id }}</td>
+										<td>{{ datum.order_status }}</td>
+										<td>{{ datum.order_date }}</td>
+										<td>{{ datum.invoice_date }}</td>
+										<td>{{ datum.refund_date }}</td>
+										<td>{{ datum.ship_date }}</td>
+										<td>{{ datum.sku }}</td>
+										<td>{{ datum.item }}</td>
+										<td>{{ datum.order_quantity }}</td>
+										<td>{{ datum.invoiced_quantity }}</td>
+										<td>{{ datum.shipped_quantity }}</td>
+										<td>{{ datum.unit_price }}</td>
+										<td>{{ datum.total_tax }}</td>
+										{% if loop.last or datum.order_id != data.store_data[loop.index].order_id %}
+										<td>{{ datum.shipping_total }}</td>
+										<td>{{ datum.total_price_usd }}</td>
+										{% else %}
+										<td>&nbsp;</td>
+										<td>&nbsp;</td>
+										{% endif %}
+										<td>{{ datum.customer_name }}</td>
+										<td>{{ datum.ship_to_city }}</td>
+										<td>{{ datum.ship_to_state }}</td>
+										<td>{{ datum.ship_to_zip }}</td>
+										<td>{{ datum.ship_to_country }}</td>
+										<td>{{ datum.payment_method }}</td>
+										<td>{{ datum.email }}</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="sales_activity">
+						<h3>Sales Activity</h3>
+						<div class="table-responsive">
+							<table class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th>Order Status</th>
+										<th># Shipped</th>
+										<th># Coupons</th>
+										<th># Gift Cards</th>
+										<th>Amount Shipped</th>
+										<th>Amount Coupons</th>
+										<th>Amount Gift Cards</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for datum in data.sales_activity_by_status %}
+									<tr>
+										<td>{{ datum.financial_status }}</td>
+										<td>{{ datum.number_shipped }}</td>
+										<td>0</td>
+										<td>0</td>
+										<td>$ {{ '%0.2f' % datum.amount_shipped }}</td>
+										<td>$ 0</td>
+										<td>$ 0</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+						<h3>Net Merchandise Sales</h3>
+						<div class="table-responsive">
+							<table class="table table-striped table-hover">
+								<tr>
+									<td>Amount Shipped</td>
+									<td>$ {{ '%0.2f' % data.totals.net_merchandise_sales.amount_shipped }}</td>
+									<td>{{ data.totals.net_merchandise_sales.number_shipped }}</td>
+								</tr>
+								<tr>
+									<td>Chargebacks</td>
+									<td>0</td>
+									<td>0</td>
+								</tr>
+								<tr>
+									<td>Coupons Applied</td>
+									<td></td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>Net Merchandise Sales</td>
+									<td>$ {{ '%0.2f' % data.totals.net_merchandise_sales.amount_shipped }}</td>
+									<td>0</td>
+								</tr>
+							</table>
+						</div>
+						<h3>One Live Commission</h3>
+						<div class="table-responsive">
+							<table class="table table-striped table-hover">
+								<tr>
+									<td>Net Merchandise Sales</td>
+									<td>$ {{ '%0.2f' % data.totals.net_merchandise_sales.amount_shipped }}</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>Commission Rate</td>
+									<td>{{ '%0.2f' % data.totals.commission.rate }}%</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>OneLive Commission</td>
+									<td>$ {{ '%0.2f' % data.totals.commission.commission }}</td>
+									<td>&nbsp;</td>
+								</tr>
+							</table>
+						</div>
+						<h3>Net Special Item Sales</h3>
+						<div class="table-responsive">
+							<table class="table table-striped table-hover">
+								<tr>
+									<td>Amount Shipped</td>
+									<td>$ 0.00</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>Chargebacks</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>Coupons Applied</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>Net Special Item Sales</td>
+									<td>$ 0.00</td>
+									<td>&nbsp;</td>
+								</tr>
+							</table>							
+						</div>
+						<h3>OneLive Special Item Commission</h3>
+						<div class="table-responsive">
+							<table class="table table-striped table-hover">
+								<tr>
+									<td>Net Special Sales</td>
+									<td>$ 0.00</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>Commission Rate</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>OneLive Commission</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;</td>
+								</tr>
+							</table>							
+						</div>
+						<h3>Due to -</h3>
+
+						<div class="table-responsive">
+							<table class="table table-striped table-hover">
+								<tr>
+									<td>Net Merchandise Sales</td>
+									<td>$ {{ '%0.2f' % data.totals.net_merchandise_sales.amount_shipped }}</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>OneLive Commission</td>
+									<td>$ ({{ '%0.2f' % data.totals.commission.commission }})</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>Merchandise Gift Cards</td>
+									<td>$ 0.00</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>Net Special Sales</td>
+									<td>$ 0.00</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>OneLive Special Commission</td>
+									<td>$ 0.00</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>Credit Card Fee</td>
+									<td>$ 0.00</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>Shipping Fees</td>
+									<td>$ 0.00</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<td>Due to -</td>
+									<td>$ {{ '%0.2f' % data.totals.due.due }}</td>
+									<td>&nbsp;</td>
+								</tr>
+							</table>							
+						</div>
+						<h3>Sales By Best Sellers</h3>
+						<div class="table-responsive">
+							<table class="table table-striped table-hover">
+								<thead>
+									<tr>
+										<th>SKU</th>
+										<th>Item Description</th>
+										<th>Amount</th>
+										<th>Quantity</th>
+										<th>Percent</th>
+										<th>Acc. Pct.</th>
+									</tr>
+								</thead>
+								<tbody>
+									{% for datum in data.sales_by_best_sellers %}
+									<tr>
+										<td>{{ datum.sku }}</td>
+										<td>{{ datum.name }}</td>
+										<td>{{ '%0.2f' % datum.total_amount }}</td>
+										<td>{{ datum.total_quantity }}</td>
+										<td>{{ '%0.2f' % datum.percent }}</td>
+										<td>{{ '%0.2f' % datum.total_percent }}</td>
+									</tr>
+									{% endfor %}
+								</tbody>
+							</table>
+						</div>
+					</div>
+					<div class="tab-pane fade" id="due">
+						<h3>Due To Varese Sarabande - 03/2016 Sales</h3>
+						<div class="table-responsive">
+							<table class="table table-striped table-hover">
+								<thead>
+									<tr>
+										<th>Store</th>
+										<th># Shipped</th>
+										<th># Coupons</th>
+										<th># Gift Cards</th>
+										<th>Amount Shipped</th>
+										<th>Chargebacks</th>
+										<th>Coupons</th>
+										<th>SubTotal</th>
+										<th>OneLive Fee</th>
+										<th>Hosting Fee</th>
+										<th>Credit Card Fee</th>
+										<th>Shipping</th>
+										<th>Due To Client</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>Varese Sarabande</td>
+										<td>{{ data.totals.net_merchandise_sales.number_shipped }}</td>
+										<td></td>
+										<td></td>
+										<td>{{ '%0.2f' % data.totals.net_merchandise_sales.amount_shipped }}</td>
+										<td></td>
+										<td></td>
+										<td>{{ '%0.2f' % data.totals.net_merchandise_sales.amount_shipped }}</td>
+										<td>({{ '%0.2f' % data.totals.commission.commission }})</td>
+										<td></td>
+										<td></td>
+										<td>0</td>
+										<td>$ {{ '%0.2f' % data.totals.due.due }}</td>
+									</tr>
+									<tr>
+										<td>Due To Client</td>
+										<td>$ {{ '%0.2f' % data.totals.due.due }}</td>
+									</tr>
+									<tr>
+										<td>Less: Expenses</td>
+										<td>$ 0</td>
+									</tr>
+									<tr>
+										<td>Total Due To Client</td>
+										<td>$ {{ '%0.2f' % data.totals.due.due }}</td>
+									</tr>
+								</tbody>
+							</table>
+							
+						</div>
+					</div>
+				</div>
+				<!-- /.table-responsive -->
+			</div>
+			<!-- /.panel-body -->
+		</div>
+		<!-- /.panel -->
+	</div>
+</div>
+{% endblock %}

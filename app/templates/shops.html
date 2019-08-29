@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+	<div class="col-lg-12">
+		<h1 class="page-header">Shops</h1>
+	</div>
+	<!-- /.col-lg-12 -->
+</div>
+<div class="row">
+	<div class="col-lg-10">&nbsp;</div>
+	<div class="col-lg-2">
+		<a class="btn btn-info pull-right" href="/shop/add">
+			<i class="fa fa-plus"></i> Add Shop
+		</a>
+	</div>
+</div>
+<div class="row">
+	<div class="col-lg-12">
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="table-responsive">
+					<table class="table table-striped table-bordered table-hover">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Name</th>
+								<th>URL</th>
+								<th>Active</th>
+							</tr>
+						</thead>
+						<tbody>
+							{% for shop in data.shops %}
+							<tr>
+								<td>{{ shop.id }}</td>
+								<td><a href="/shop/edit/{{ shop.id }}">{{ shop.name }}</a></td>
+								<td>{{ shop.url }}</td>
+								<td>
+									{% if shop.active %}
+									<i class="fa fa-check"></i>
+									{% else %}
+									<i class="fa fa-times"></i>
+									{% endif %}
+								</td>
+							</tr>
+							{% endfor %}
+						</tbody>
+					</table>
+				</div>
+				<!-- /.table-responsive -->
+			</div>
+			<!-- /.panel-body -->
+		</div>
+		<!-- /.panel -->
+	</div>
+</div>
+{% endblock %}
+
